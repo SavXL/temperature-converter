@@ -42,38 +42,61 @@ char getYesOrNo(const std::string &prompt)
         std::cin >> yesOrNo;
         yesOrNo = static_cast<char>(std::tolower(static_cast<unsigned char>(yesOrNo)));
         if (yesOrNo == 'y' || yesOrNo == 'n') break;
-        std::cout << "\nYou've entered an invalid character! Please enter either a 'y' or an 'n': "; 
+        std::cout << "\nYou've entered an invalid character! Please only enter either a 'y' or an 'n', capital or lowercase: "; 
     }
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     return yesOrNo;
 }
 
-std::string menuErrorHandlingAndMessage()
+std::string inputErrorHandling()
 {
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return "\nThe menu option you've entered is invalid! Please try again: ";
+    return "\nThe input you've entered is invalid! Please try again: ";
 }
 
-std::string conversionErrorHandlingAndMessage()
+double fahrenheitToCelsius(double f)
 {
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return "\nThe value you've entered is invalid! Please try again: ";
-}
+    const double thirtyTwo = 32.0;
+    const double fiveOverNine = 0.555555555555555; // Using the fraction caused issues
+    return (f - thirtyTwo) * fiveOverNine;
+} // If F = 32, 32 - 32 = 0 -> 0 * 5 / 9 = 0. So, 32F = 0C.
 
-double fahrenheitToCelsius(double f) { return (f - 32) * 5 / 9; }
+double fahrenheitToKelvin(double f)
+{
+    const double thirtyTwo = 32.0;
+    const double fiveOverNine = 0.555555555555555;
+    const double twoHundredSeventyThreePointOneFive = 273.15;
+    return (f - thirtyTwo) * fiveOverNine + twoHundredSeventyThreePointOneFive;
+} // If F = 32, 32 - 32 = 0 -> 0 * 5 / 9 = 0 -> 0 + 273.15 = 273.15. So, 32F = 273.15K.
 
-double fahrenheitToKelvin(double f) { return (f - 32) * 5 / 9 + 273.15; }
+double celsiusToFahrenheit(double c)
+{
+    const double thirtyTwo = 32.0;
+    const double nineOverFive = 1.8;
+    return (c * nineOverFive) + thirtyTwo;
+} // If C = 32, 32 * 9/5 = 57.6 -> 57.6 + 32 = 89.6. So, 32C = 89.6F.
 
-double celsiusToFahrenheit(double c) { return (c * 9/5) + 32; }
+double celsiusToKelvin(double c)
+{
+    const double twoHundredSeventyThreePointOneFive = 273.15;
+    return c + twoHundredSeventyThreePointOneFive;
+} // If C = 32, 32 + 273.15 = 305.15. So, 32C = 305.15K.
 
-double celsiusToKelvin(double c) { return c + 273.15; }
+double kelvinToFahrenheit(double k)
+{
+    const double twoHundredSeventyThreePointOneFive = 273.15;
+    const double onePointEight = 1.8;
+    const double thirtyTwo = 32.0;
+    return (k - twoHundredSeventyThreePointOneFive) * onePointEight + thirtyTwo;
+} // If K = 32, 32 - 273.15 = -241.15 -> -241.15 * 9 / 5 = -434.07 -> -434.07 + 32 = -402.07. So, 32K = -402.07F.
 
-double kelvinToFahrenheit(double k) { return (k - 273.15) * 9 / 5 + 32; }
-
-double kelvinToCelsius(double k) { return k - 273.15; }
+double kelvinToCelsius(double k)
+{
+    const double twoHundredSeventyThreePointOneFive = 273.15;
+    return k - twoHundredSeventyThreePointOneFive;
+} // If K = 32, 32 - 273.15 = -241.15. So, 32K = -241.15C.
 
 int main()
 {
@@ -86,6 +109,25 @@ int main()
             "\nHow many conversions would you like to do? Make sure to enter a whole number: ",
             "\nYou've entered something that isn't a whole number! Please try again: "
         );
+
+        if(total <= 0)
+        {
+            std::cout << "\nOh, haaa haaa.\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            std::cout << "You're an actual riot.\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+            std::cout << "Actually, nah. Hold up. I got something for you.\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+            std::cout << "THINK FAST, CHUCKLENUTS!\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            
+            for(int i = 0; i < INT16_MAX; i++)
+            {
+                std::cout << i;
+            }
+
+            return 1;
+        }
 
         for(int i = 1; i <= total; ++i)
         {
@@ -100,13 +142,8 @@ int main()
             int menuOption = getValidMenuAndConversionSelection
             (
                 "Choose a conversion from the list above! (1-6): ",
-                menuErrorHandlingAndMessage()
+                inputErrorHandling()
             );
-
-            if(menuOption <= 0)
-            {
-                
-            }
 
             double inputTemp = 0.0;
 
@@ -121,19 +158,21 @@ int main()
                     inputTemp = getValidTemperature
                     (
                         "\nPlease enter the temperature you'd like to convert: ",
-                        conversionErrorHandlingAndMessage()
+                        inputErrorHandling()
                     );
                     break;
                 default:
                     if(menuOption < 1 || menuOption > 6)
                     {
-                        std::cout << "\nOh.\n";
+                        std::cout << "\nYou're not funny.\n";
                         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                        std::cout << "Look at this guy.\n";
+                        std::cout << "I hope you know that.\n";
                         std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-                        std::cout << "We got a fuckin' goofster in here.\n";
-                        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-                        std::cout << "WIP\n";
+                        std::cout << "You know what. Press 'Enter' rn. See what happens.\n";
+
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        std::cin.get();
+
                         return 1;
                     }
             }
@@ -144,27 +183,27 @@ int main()
             {
                 case 1:
                     result = fahrenheitToCelsius(inputTemp);
-                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " - 32) * 5 / 9 => (" << (inputTemp - 32) << ") * 0.5555... = " << fahrenheitToCelsius(inputTemp) << '\n';
+                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " - 32) * 5 / 9 => (" << (inputTemp - 32) << ") * 0.5555... = " << result << '\n';
                     break;
                 case 2:
                     result = fahrenheitToKelvin(inputTemp);
-                    std::cout << "\nThe math for this conversion is as follows:  (" << inputTemp << " - 32) * 5 / 9 + 273.15 => (" << (inputTemp - 32) << ") * 0.5555... + 273.15 => (" << (inputTemp - 32) * 5/9 << ") + 273.15 = " << fahrenheitToKelvin(inputTemp) << "\n\n";
+                    std::cout << "\nThe math for this conversion is as follows:  (" << inputTemp << " - 32) * 5 / 9 + 273.15 => (" << (inputTemp - 32) << ") * 0.5555... + 273.15 => (" << (inputTemp - 32) * 5/9 << ") + 273.15 = " << result << "\n\n";
                     break;
                 case 3:
                     result = celsiusToFahrenheit(inputTemp);
-                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " * 9/5) + 32 => (" << (inputTemp * 9/5) << ") * + 32 = " << celsiusToFahrenheit(inputTemp) << '\n';
+                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " * 9/5) + 32 => (" << (inputTemp * 9/5) << ") + 32 = " << result << '\n';
                     break;
                 case 4:
                     result = celsiusToKelvin(inputTemp);
-                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " + 273.15) = " << celsiusToKelvin(inputTemp) << '\n';
+                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " + 273.15) = " << result << '\n';
                     break;
                 case 5:
                     result = kelvinToFahrenheit(inputTemp);
-                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " - 273.15) * 9 / 5 + 32 => (" << (inputTemp - 273.15) << ") * 1.5 + 32 => " << ((inputTemp - 273.15) * 1.5) << " + 32 = " << kelvinToFahrenheit(inputTemp) << '\n';
+                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " - 273.15) * 9 / 5 + 32 => (" << (inputTemp - 273.15) << ") * 1.8 + 32 => " << ((inputTemp - 273.15) * 1.8) << " + 32 = " << result << '\n';
                     break;
                 case 6:
                     result = kelvinToCelsius(inputTemp);
-                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " - 273.15) = " << kelvinToCelsius(inputTemp) << '\n';
+                    std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " - 273.15) = " << result << '\n';
                     break;
             }
 
