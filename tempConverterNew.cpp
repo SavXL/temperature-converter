@@ -15,7 +15,6 @@ int getValidMenuAndConversionSelection(const std::string &prompt, const std::str
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-
     return validConversionAndMenuSelection;
 }
 
@@ -29,7 +28,6 @@ double getValidTemperature(const std::string &prompt, const std::string &errorMs
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-    
     return validTemperature;
 }
 
@@ -44,7 +42,6 @@ char getYesOrNo(const std::string &prompt)
         if (yesOrNo == 'y' || yesOrNo == 'n') break;
         std::cout << "\nYou've entered an invalid character! Please only enter either a 'y' or an 'n', capital or lowercase: "; 
     }
-
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     return yesOrNo;
 }
@@ -125,7 +122,6 @@ int main()
             {
                 std::cout << i;
             }
-
             return 1;
         }
 
@@ -169,10 +165,8 @@ int main()
                         std::cout << "I hope you know that.\n";
                         std::this_thread::sleep_for(std::chrono::milliseconds(2000));
                         std::cout << "You know what. Press 'Enter' rn. See what happens.\n";
-
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         std::cin.get();
-
                         return 1;
                     }
             }
@@ -206,15 +200,12 @@ int main()
                     std::cout << "\nThe math for this conversion is as follows: (" << inputTemp << " - 273.15) = " << result << '\n';
                     break;
             }
-
             std::cout << "\nAnd here's the final result: " << inputTemp << " --> " << result << '\n';
         }
-
         char again = getYesOrNo("\nDo you want to do another conversion? (y/n): ");
         wantToDoMoreConversions = (again == 'y');
     }
     std::cout << "\nThank you for using my Temperature Converter! Press press 'Enter' to end the program. :)\n";
     std::cin.get();
-
     return 0;
 }
